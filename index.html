@@ -4,29 +4,33 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex" />
-  <meta name="theme-color" content="#eef0ea" />
+  <meta name="theme-color" content="#0f1116" />
+  <meta name="color-scheme" content="dark" />
   <title>Syllabes ratées · TokiBot</title>
   <link rel="preconnect" href="https://api.fontshare.com" />
   <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
   <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,800&f[]=switzer@400,500,600&display=swap" />
   <style>
     :root {
-      --paper: #eef0ea;
-      --cell: #fbfbf8;
-      --ink: #0e1116;
-      --soft: #5d636b;
-      --blue: #2440ff;
-      --line: 1.5px solid var(--ink);
+      --paper: #0f1116;
+      --cell: #171a21;
+      --cell-hi: #232733;
+      --ink: #e6e8ee;
+      --soft: #8b92a1;
+      --rule: #3b4150;
+      --blue: #2f4bff;
+      --blue-hi: #8ea0ff;
+      --line: 1.5px solid var(--rule);
       --display: "Cabinet Grotesk", "Switzer", system-ui, sans-serif;
       --text: "Switzer", system-ui, -apple-system, "Segoe UI", sans-serif;
       --ease: cubic-bezier(.19, 1, .22, 1);
     }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0; }
-    html { scrollbar-color: var(--ink) var(--paper); scrollbar-width: thin; }
+    html { scrollbar-color: var(--rule) var(--paper); scrollbar-width: thin; }
     body { background: var(--paper); color: var(--ink); font: 400 16px/1.5 var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
     ::selection { background: var(--blue); color: #fff; }
     button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
-    :focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+    :focus-visible { outline: 3px solid var(--blue-hi); outline-offset: 2px; }
 
     .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px 64px; }
     header { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: var(--line); font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
@@ -46,11 +50,11 @@
     .tools label { flex: 1 1 220px; display: block; }
     .tools input { width: 100%; background: transparent; border: 0; border-bottom: var(--line); font: 500 18px var(--text); padding: 8px 0; color: var(--ink); border-radius: 0; }
     .tools input::placeholder { color: var(--soft); }
-    .tools input:focus { outline: none; border-bottom-color: var(--blue); box-shadow: 0 1.5px 0 var(--blue); }
+    .tools input:focus { outline: none; border-bottom-color: var(--blue-hi); box-shadow: 0 1.5px 0 var(--blue-hi); }
     .sort { display: flex; gap: 18px; font-size: 14px; font-weight: 600; }
     .sort button { padding: 8px 0 6px; color: var(--soft); border-bottom: 3px solid transparent; transition: color .2s, border-color .2s; }
     .sort button:hover { color: var(--ink); }
-    .sort button[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--blue); }
+    .sort button[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--blue-hi); }
 
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(116px, 1fr)); border-top: var(--line); border-left: var(--line); }
     .cell {
@@ -59,7 +63,7 @@
       transition: background .15s steps(2), color .15s steps(2);
     }
     .cell::after { /* case encrée puis révélée, en cascade */
-      content: ""; position: absolute; inset: 0; background: var(--ink); transform-origin: 50% 0;
+      content: ""; position: absolute; inset: 0; background: var(--cell-hi); transform-origin: 50% 0;
       animation: reveal .55s var(--ease) both; animation-delay: calc(var(--i) * 28ms + .25s); pointer-events: none;
     }
     .cell .syl { font: 800 clamp(26px, 6.4vw, 38px)/1 var(--display); letter-spacing: .02em; text-transform: uppercase; }
@@ -71,26 +75,25 @@
     .cell[disabled] { cursor: default; background: var(--paper); color: var(--soft); }
     .none { grid-column: 1 / -1; padding: 40px 20px; border-right: var(--line); border-bottom: var(--line); background: var(--cell); }
 
-    dialog { margin: auto; width: min(640px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); background: var(--cell); color: var(--ink); border: 2px solid var(--ink); padding: 0; overflow: hidden; }
-    dialog::backdrop { background: rgba(14, 17, 22, .55); }
+    dialog { margin: auto; width: min(640px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); background: var(--cell); color: var(--ink); border: 2px solid var(--rule); padding: 0; overflow: hidden; }
+    dialog::backdrop { background: rgba(4, 5, 8, .72); }
     dialog[open] { animation: sheet .35s var(--ease); }
     dialog[open]::backdrop { animation: fade .25s ease; }
-    .d-head { display: flex; align-items: stretch; border-bottom: 2px solid var(--ink); }
+    .d-head { display: flex; align-items: stretch; border-bottom: 2px solid var(--rule); }
     .d-head h2 { flex: 1; padding: 12px 18px; font: 800 44px/1 var(--display); letter-spacing: .02em; text-transform: uppercase; display: flex; align-items: baseline; gap: 12px; }
     .d-head h2 small { font: 500 14px var(--text); letter-spacing: 0; text-transform: none; color: var(--soft); }
-    .sq { width: 56px; display: grid; place-items: center; border-left: 2px solid var(--ink); transition: background .15s steps(2), color .15s steps(2); }
+    .sq { width: 56px; display: grid; place-items: center; border-left: 2px solid var(--rule); transition: background .15s steps(2), color .15s steps(2); }
     .sq:hover { background: var(--blue); color: #fff; }
     .sq svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: square; }
-    .d-body { overflow-y: auto; max-height: calc(100dvh - 130px); scrollbar-width: thin; scrollbar-color: var(--ink) var(--cell); }
+    .d-body { overflow-y: auto; max-height: calc(100dvh - 130px); scrollbar-width: thin; scrollbar-color: var(--rule) var(--cell); }
     .words { list-style: none; display: grid; grid-template-columns: repeat(2, 1fr); }
-    .words li { border-bottom: 1px solid var(--ink); }
-    .words li:nth-child(odd) { border-right: 1px solid var(--ink); }
+    .words li { border-bottom: 1px solid var(--rule); }
+    .words li:nth-child(odd) { border-right: 1px solid var(--rule); }
     .word { width: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 11px 18px; text-align: left; font: 500 18px var(--text);
       transition: background .15s steps(2), color .15s steps(2); animation: rowin .4s var(--ease) both; animation-delay: calc(var(--i) * 16ms); }
-    .word mark { background: none; color: var(--blue); font-weight: 600; }
+    .word mark { background: none; color: var(--blue-hi); font-weight: 600; }
     .word .tag { font-size: 12px; color: transparent; transition: color .15s; }
-    .word:hover, .word:focus-visible { background: var(--ink); color: var(--cell); }
-    .word:hover mark, .word:focus-visible mark { color: #8fa0ff; }
+    .word:hover, .word:focus-visible { background: var(--cell-hi); }
     .word:hover .tag, .word:focus-visible .tag, .word.copied .tag { color: currentColor; }
     .word.copied { background: var(--blue); color: #fff; }
     .word.copied mark { color: #fff; }
@@ -98,7 +101,6 @@
 
     .empty { padding: 90px 0; max-width: 40ch; }
     .empty strong { display: block; font: 800 32px/1.1 var(--display); text-transform: uppercase; margin-bottom: 10px; }
-    footer { margin-top: 40px; font-size: 13px; color: var(--soft); }
 
     @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
     @keyframes reveal { from { transform: scaleY(1); } to { transform: scaleY(0); } }
@@ -122,7 +124,6 @@
     <span id="lang-badge">FR</span>
   </header>
   <main id="root"></main>
-  <footer>Lien généré par TokiBot en fin de partie.</footer>
 </div>
 
 <dialog id="dlg" aria-labelledby="d-title">
